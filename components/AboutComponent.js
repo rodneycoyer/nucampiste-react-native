@@ -21,20 +21,20 @@ class About extends Component {
         const renderPartner = ({item}) => {
             return (
                 <ListItem
-                    title={item.name}
-                    subtitle={item.description}
-                    leftAvatar={{ source: require('./images/bootstrap-logo.png')}}
+                    title = {item.name}
+                    subtitle = {item.description}
+                    leftAvatar = {{ source: require('./images/bootstrap-logo.png')}}
                 />
             );
         };
         return (
             <ScrollView>
                 <RenderMission />
-                <Card title="Community Partners">
+                <Card title = "Community Partners">
                     <FlatList
-                    data={this.state.partners}
-                    renderItem={renderPartner}
-                    keyExtractor={item => item.id.toString()}
+                    data = {this.state.partners}
+                    renderItem = {renderPartner}
+                    keyExtractor = {item => item.id.toString()}
                     />
                 </Card>
             </ScrollView>
