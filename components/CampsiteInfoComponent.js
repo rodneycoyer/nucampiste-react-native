@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet, Alert, PanResponder } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
@@ -23,12 +23,44 @@ function RenderCampsite(props) {
 
     const {campsite} = props;
 
+    const recognizeDrag = ({dx}) => (dx < -200) ? true : false;
+
+    const panResponder = PanResponder.create({
+
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderEnd: (e, gestureState) => {
+            console.log('pan responder end', gestureState);
+
+            if (recognizeDrag(gestureState)) {
+                Alert.alert(
+                    'Add Favorite',
+                    'Are you sure you wish to add ' + campsite.name + ' to favorites?',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                            onPress: () => console.log('Cancel Pressed')
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () => props.favorite ?
+                                console.log('Already set as a favorite') : props.markFavorite()
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            }
+            return true;
+        }
+    });
+
     if (campsite) {
         return (
             <Animatable.View
                 animation = 'fadeInDown'
                 duration = {2000}
                 delay = {1000}
+                {...panResponder.panHandlers}
             >
                 <Card
                     featuredTitle = {campsite.name}
@@ -68,14 +100,14 @@ function RenderComments({comments}) {
     const renderCommentItem = ({item}) => {
         return (
             <View style = {{margin: 10}}>
-                <Text style = {{fontSize: 14}}>{item.text}</Text>
+                <Text style = {{fontSize: 14}}> {item.text} </Text>
                 <Rating
                     startingValue = {item.rating}
                     imageSize = {10}
                     readonly
                     style = {{alignItems: 'flex-start', paddingVertical: '5%'}}
                 />
-                <Text style = {{fontSize: 12}}>{`-- ${item.author}, ${item.date}`}</Text>
+                <Text style = {{fontSize: 12}}> {`-- ${item.author}, ${item.date}`} </Text>
             </View>
         );
     };
@@ -179,8 +211,8 @@ class CampsiteInfo extends Component {
                         <Input
                             placeholder = 'Comment'
                             leftIcon = {{
-                                    name: 'comment-o',
-                                    type: 'font-awesome'
+                                name: 'comment-o',
+                                type: 'font-awesome'
                             }}
                             leftIconContainerStyle = {{paddingRight: 10}}
                             onChangeText = {value => this.setState({ text: value })}
@@ -214,6 +246,7 @@ class CampsiteInfo extends Component {
 }
 
 const styles = StyleSheet.create({
+
     cardRow: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -221,10 +254,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         margin: 20
     },
+
     modal: {
         justifyContent: 'center',
         margin: 20
     }
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CampsiteInfo);

@@ -17,7 +17,10 @@ class Contact extends Component {
                     duration = {2000}
                     delay = {1000}
                 >
-                    <Card title ="Contact Information" wrapperStyle={{margin: 20}}>
+                    <Card
+                        title ="Contact Information"
+                        wrapperStyle = {{margin: 20}}
+                    >
                         <Text> 1 Nucamp Way </Text>
                         <Text> Seattle, WA 98001 </Text>
                         <Text style = {{marginBottom: 10}}> U.S.A. </Text>
