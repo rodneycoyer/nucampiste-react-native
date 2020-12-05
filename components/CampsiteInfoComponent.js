@@ -10,13 +10,12 @@ const mapStateToProps = state => {
         campsites: state.campsites,
         comments: state.comments,
         favorites: state.favorites,
-        rating: state.rating
     };
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId)),
-    postComment: campsiteId => (campsiteId, rating, author, text)
+    postFavorite: campsiteId => postFavorite(campsiteId),
+    postComment: (campsiteId, rating, author, text) => postComment(campsiteId, rating, author, text)
 };
 
 function RenderCampsite(props) {
@@ -60,9 +59,14 @@ function RenderComments({comments}) {
 
     const renderCommentItem = ({item}) => {
         return (
-            <View style={{margin: 10}}>
+            <View style = {{margin: 10}}>
                 <Text style = {{fontSize: 14}}>{item.text}</Text>
-                <Text style = {{fontSize: 12}}>{item.rating} Stars</Text>
+                <Rating
+                    startingValue = {item.rating}
+                    imageSize = {10}
+                    readonly
+                    style = {{alignItems: 'flex-start', paddingVertical: '5%'}}
+                />
                 <Text style = {{fontSize: 12}}>{`-- ${item.author}, ${item.date}`}</Text>
             </View>
         );
@@ -105,24 +109,27 @@ class CampsiteInfo extends Component {
     }
 
     handleComment(campsiteId) {
-        this.props.postComment(value.rating, value.author, value.text);
+        this.props.postComment(campsiteId, this.state.rating, this.state.author, this.state.text);
+
         this.toggleModal();
     }
 
     resetForm() {
         this.setState({
-            campers: 1,
-            hikeIn: false,
-            date: new Date(),
-            showCalendar: false,
+            rating: 5,
+            author: '',
+            text: '',
             showModal: false
         });
     }
 
     render() {
         const campsiteId = this.props.navigation.getParam('campsiteId');
+
         const campsite = this.props.campsites.campsites.filter(campsite => campsite.id === campsiteId)[0];
+
         const comments = this.props.comments.comments.filter(comment => comment.campsiteId === campsiteId);
+
         return (
             <ScrollView>
                 <RenderCampsite campsite = {campsite}
@@ -153,7 +160,7 @@ class CampsiteInfo extends Component {
                             }}
                             leftIconContainerStyle = {{paddingRight: 10}}
                             onChangeText = {value => this.setState({ author: value })}
-                            value = {this.text}
+                            value = {this.state.author}
                         />
                         <Input
                             placeholder = 'Comment'
@@ -162,8 +169,8 @@ class CampsiteInfo extends Component {
                                     type: 'font-awesome'
                             }}
                             leftIconContainerStyle = {{paddingRight: 10}}
-                            onChangeText = {value => this.setState({ comment: value })}
-                            value = {this.text}
+                            onChangeText = {value => this.setState({ text: value })}
+                            value = {this.state.text}
                         />
                         <View style = {{margin: 10}}>
                             <Button
@@ -171,8 +178,8 @@ class CampsiteInfo extends Component {
                                     this.handleComment(campsiteId);
                                     this.resetForm();
                                 }}
-                                color= '#5637DD'
-                                title= 'Submit'
+                                color = '#5637DD'
+                                title = 'Submit'
                             />
                         </View>
                         <View style = {{margin: 10}}>
