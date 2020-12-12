@@ -5,6 +5,7 @@ import About from './AboutComponent';
 import Contact from './ContactComponent';
 import Reservation from './ReservationComponent';
 import Favorites from './FavoritesComponent';
+import Login from './LoginComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -167,6 +168,29 @@ const FavoritesNavigator = createStackNavigator(
     }
 );
 
+const LoginNavigator = createStackNavigator(
+    {
+        Login: { screen: Login }
+    },
+    {
+        defaultNavigationOptions: ({navigation}) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name = 'sign-in'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}
+                onPress = {() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
 const CustomDrawerContentComponent = props => (
     <ScrollView>
         <SafeAreaView 
@@ -187,15 +211,29 @@ const CustomDrawerContentComponent = props => (
 
 const MainNavigator = createDrawerNavigator(
     {
+        Login: {
+            screen: LoginNavigator,
+            navigationOptions: {
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name = 'sign-in'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
+                    />
+                )
+            }
+        },
+
         Home: {
             screen: HomeNavigator,
             navigationOptions: {
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='home'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'home'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
@@ -205,10 +243,10 @@ const MainNavigator = createDrawerNavigator(
             navigationOptions: {
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='list'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'list'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
@@ -220,10 +258,10 @@ const MainNavigator = createDrawerNavigator(
                 drawerLabel: 'Reserve Campsite',
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='tree'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'tree'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
@@ -235,15 +273,14 @@ const MainNavigator = createDrawerNavigator(
                 drawerLabel: 'My Favorites',
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='heart'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'heart'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
         },
-
 
         About: {
             screen: AboutNavigator,
@@ -251,10 +288,10 @@ const MainNavigator = createDrawerNavigator(
                 drawerLabel: 'About Us',
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='info-circle'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'info-circle'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
@@ -265,16 +302,17 @@ const MainNavigator = createDrawerNavigator(
                 drawerLabel: 'Contact Us',
                 drawerIcon: ({tintColor}) => (
                     <Icon
-                        name='address-card'
-                        type='font-awesome'
-                        size={24}
-                        color={tintColor}
+                        name = 'address-card'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
                     />
                 )
             }
         }
     },
     {
+        initialRouteName: 'Home',
         drawerBackgroundColor: '#CEC8FF',
         contentComponent: CustomDrawerContentComponent
     }
